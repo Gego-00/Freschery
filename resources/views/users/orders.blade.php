@@ -24,30 +24,50 @@
                             <thead>
                                 <tr>
                                     <th width="5%"></th>
-                                    <th>Invoice</th>
-                                    <th>Date</th>
-                                    <th>Total</th>
+                                    <th>Name</th>
+                                    <th>Last Name</th>
+                                    <th>Address</th>
+                                    <th>Phone Number</th>
+                                    <th>Email</th>
+                                    <th>Town</th>
                                     <th>Status</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
+
+                                @if($orders->count() > 0)
+
+                                @foreach ($orders as $order)
                                 <tr>
-                                    <td>1</td>
+                                    <td>{{ $order->id }}</td>
                                     <td>
-                                        AL121N8H2XQB47
+                                        {{ $order->name }}
                                     </td>
                                     <td>
-                                        12-12-2017
+                                        {{ $order->last_name }}
                                     </td>
                                     <td>
-                                        Rp 200.000
+                                        {{ $order->address }}
                                     </td>
                                     <td>
-                                        Delivered
+                                        {{ $order->phone_number }}
                                     </td>
-                                    
+                                    <td>
+                                        {{ $order->email }}
+                                    </td>
+                                    <td>
+                                        {{ $order->town }}
+                                    </td>
+                                    <td>
+                                        {{ $order->status }}
+                                    </td>
                                 </tr>
+                                @endforeach
+                                
+                                @else
+                                    <p class="alert alert-success">You have not made an order yet. Make an order to be able to view your orders.</p>
+                                @endif
                             </tbody>
                         </table>
                     </div>

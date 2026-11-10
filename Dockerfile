@@ -1,16 +1,17 @@
 FROM php:8.3-fpm
 
-# Install system dependencies and PHP extensions for Laravel
+# Install standard system requirements and Nginx
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    libzip-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
     nginx \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd pdo_mysql pdo_pgsql zip pcntl opcache
+    && rm -rf /var/lib/apt/lists/*
+
+# Use the official community extension installer script to flawlessly bundle Laravel's dependencies
+ADD https://github.com /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions gd pdo_mysql pdo_pgsql zip pcntl opcache
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

@@ -1,16 +1,16 @@
 FROM php:8.3-fpm
 
-# Install standard system requirements and Nginx
+# Install standard system requirements, curl, and Nginx
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     nginx \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Use the official community extension installer script to flawlessly bundle Laravel's dependencies
-ADD https://github.com /usr/local/bin/
-
-RUN chmod +x /usr/local/bin/install-php-extensions && \
+# Download the extension installer directly using curl
+RUN curl -sSL https://github.com -o /usr/local/bin/install-php-extensions && \
+    chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions gd pdo_mysql pdo_pgsql zip pcntl opcache
 
 # Install Composer

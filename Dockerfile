@@ -17,9 +17,9 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Set perfect permissions for Laravel
 RUN chown -R application:application /app/storage /app/bootstrap/cache
 
-# Overwrite the container startup to run migrations and caches before booting the server
+# Overwrite the container startup using the exact path for webdevops entrypoint engine
 CMD php artisan migrate --force && \
     php artisan config:cache && \
     php artisan route:cache && \
     php artisan view:cache && \
-    /entrypoint.sh
+    /opt/docker/bin/entrypoint.sh

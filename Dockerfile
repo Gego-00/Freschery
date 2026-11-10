@@ -1,44 +1,25 @@
-FROM php:8.3-fpm
+FROM webdevops/php-nginx:8.3-alpine
 
-# Install standard system requirements, curl, and Nginx
-RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    nginx \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-# Download the extension installer directly using curl
-RUN curl -sSL https://github.com -o /usr/local/bin/install-php-extensions && \
-    chmod +x /usr/local/bin/install-php-extensions && \
-    install-php-extensions gd pdo_mysql pdo_pgsql zip pcntl opcache
-
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Set the document root for Laravel's public folder (Configures Nginx automatically)
+ENV WEB_DOCUMENT_ROOT=/app/public
+ENV PORT=10000
+EXPOSE 10000
 
 # Set working directory
 WORKDIR /app
 
-# Copy application files
+# Copy the entire project
 COPY . /app
 
-# Install PHP dependencies
+# Install Composer dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Set correct permissions for Laravel directories
-RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
+# Set perfect permissions for Laravel
+RUN chown -R application:application /app/storage /app/bootstrap/cache
 
-# Copy custom Nginx configuration
-COPY nginx.conf /etc/nginx/sites-available/default
-
-# Expose Render's default port variable
-ENV PORT=10000
-EXPOSE 10000
-
-# Run migrations, optimize caches, and start both PHP-FPM & Nginx
+# Overwrite the container startup to run migrations and caches before booting the server
 CMD php artisan migrate --force && \
     php artisan config:cache && \
     php artisan route:cache && \
     php artisan view:cache && \
-    php-fpm -D && \
-    nginx -g "daemon off;"
+    /entrypoint.sh

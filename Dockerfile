@@ -1,6 +1,6 @@
 FROM webdevops/php-nginx:8.3-alpine
 
-# Set the document root for Laravel's public folder (Configures Nginx automatically)
+# Set the document root for Laravel's public folder
 ENV WEB_DOCUMENT_ROOT=/app/public
 ENV PORT=10000
 EXPOSE 10000
@@ -17,9 +17,9 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Set perfect permissions for Laravel
 RUN chown -R application:application /app/storage /app/bootstrap/cache
 
-# Overwrite the container startup using the exact path for webdevops entrypoint engine
-CMD php artisan migrate --force && \
-    php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    /opt/docker/bin/entrypoint.sh
+# Make our custom deployment script executable
+RUN chmod +x /app/render-deploy.sh
+
+# Let the official entrypoint execute our script directly
+ENTRYPOINT ["/opt/docker/bin/entrypoint.sh"]
+CMD ["/app/render-deploy.sh"]

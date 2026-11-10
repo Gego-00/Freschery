@@ -103,16 +103,16 @@
                         <!-- Navbar Menu -->
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
-                                <a href="{{ route('home') }}" class="nav-link">Shop</a>
+                                <a href="{{ route('home') }}" class="nav-link">Home</a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('products.shop') }}" class="nav-link">Shop</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('about') }}" class="nav-link">Shop</a>
+                                <a href="{{ route('about') }}" class="nav-link">About</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('contact') }}" class="nav-link">Shop</a>
+                                <a href="{{ route('contact') }}" class="nav-link">Contact</a>
                             </li>
                             @guest
                                 @if (Route::has('register'))
